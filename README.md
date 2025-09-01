@@ -311,7 +311,7 @@ We welcome contributions! Here's how to get started:
 
 - **🐛 Bug Reports**: [Create an Issue](https://github.com/yourusername/divar-analyzer/issues)
 - **💡 Feature Requests**: [Start a Discussion](https://github.com/yourusername/divar-analyzer/discussions)
-- **📧 Email**: your.email@example.com
+- **📧 Email**: iamyasaminaho@gmail.com
 
 ---
 
