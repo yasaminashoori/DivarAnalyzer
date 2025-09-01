@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Divar Real Estate Data Analysis</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/calendar.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs-jalali@1/dist/dayjs-jalali.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="brand">
+                <div class="logo"></div>
+                <div>
+                    <h1 class="muted">Explore the changes in these days!</h1>
+                </div>
+            </div>
+            <span class="badge">GitHub</span>
+        </div>
+
+        <div class="controls panel">
+            <div class="controls-grid">
+                <div class="filters">
+                    <label for="dateFrom">From:</label>
+                    <input type="date" id="dateFrom" />
+
+                    <label for="dateTo">To:</label>
+                    <input type="date" id="dateTo" />
+
+                    <label for="districtFilter">Trend Districts:</label>
+                    <select id="districtFilter">
+                        <option value="all">All</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="6">6</option>
+                        <option value="15">15</option>
+                    </select>
+                </div>
+                <div class="actions">
+                    <div class="actions-left">
+                        <button class="btn secondary" id="btnDemo">Click to load sample data</button>
+                    </div>
+
+                    <div class="actions-right">
+                        <button class="btn" id="btnAnalyze">Analyze</button>
+                        <button class="btn secondary" id="btnDownload">Download CSV</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="messages"></div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid" id="statsGrid" style="display: none;">
+            <div class="stat-card">
+                <div class="stat-number" id="totalAds">-</div>
+                <div class="stat-label">کل آگهی‌ها</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="avgPrice">-</div>
+                <div class="stat-label">متوسط قیمت (میلیارد تومان)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="priceGrowth">-</div>
+                <div class="stat-label">رشد قیمت (%)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="hotDistrict">-</div>
+                <div class="stat-label">داغ‌ترین منطقه</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="avgSize">-</div>
+                <div class="stat-label">متوسط متراژ</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalValue">-</div>
+                <div class="stat-label">ارزش کل بازار (میلیارد)</div>
+            </div>
+        </div>
+        <div class="chart-container" id="timeChart" style="display: none;">
+            <h3 class="chart-title">📈 روند تعداد آگهی‌ها در طول زمان</h3>
+            <div class="chart-wrapper">
+                <canvas id="timeSeriesChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Price Chart -->
+        <div class="chart-container" id="priceChart" style="display: none;">
+            <h3 class="chart-title">💰 توزیع قیمت آگهی‌ها بر اساس منطقه</h3>
+            <div class="chart-wrapper">
+                <canvas id="priceDistChart"></canvas>
+            </div>
+        </div>
+        <div class="chart-container" id="mapContainer" style="display: none;">
+            <h3 class="chart-title">🗺️ نقشه پراکندگی آگهی‌ها</h3>
+            <div id="map"></div>
+        </div>
+        <div dir="rtl" id="insights" style="display: none;" class="panel pad">
+            <h3>📊 تحلیل مارکت</h3>
+            <div id="insightsBody"></div>
+        </div>
+        <div id="peaksPanel" style="display: none;" class="panel">
+            <div class="table-wrap">
+                <h3>🏔️ بالاترین قیمت در منطقه</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>منطقه</th>
+                            <th>بالاترین قیمت</th>
+                        </tr>
+                    </thead>
+                    <tbody id="peaksBody"></tbody>
+                </table>
+            </div>
+        </div>
+        <div id="dataTable" style="display: none;">
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>تاریخ</th>
+                            <th>منطقه</th>
+                            <th>تعداد آگهی</th>
+                            <th>متوسط قیمت (میلیارد)</th>
+                            <th>رشد</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Real Estate Market Analysis Tool</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
