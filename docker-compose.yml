@@ -1,0 +1,21 @@
+services:
+  divar-web:
+    image: nginx:alpine
+    volumes:
+      - ./Frontend:/usr/share/nginx/html:ro
+    ports:
+      - "3000:80"
+    restart: unless-stopped
+  divar-api:
+    build: ./Backend/DivarAnalyzer
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    volumes:
+      - divar-data:/app/Data
+      - divar-exports:/app/Exports
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+volumes:
+  divar-data:
+  divar-exports:

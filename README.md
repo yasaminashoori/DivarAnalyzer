@@ -76,6 +76,12 @@ dotnet run
 # Navigate to https://localhost:5001
 ```
 
+### Using Docker Compose
+```bash
+docker compose up --build
+```
+
+
 ---
 
 ## 📱 How to Use
